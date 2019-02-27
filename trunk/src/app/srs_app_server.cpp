@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <srs_app_server.hpp>
 
+#include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <sys/types.h>
@@ -436,6 +437,11 @@ int SrsSignalManager::start()
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sigaction(SIGUSR2, &sa, NULL);
+
+    sa.sa_handler = SrsSignalManager::sig_catcher;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGCHLD, &sa, NULL);
 
     srs_trace("signal installed");
 
@@ -975,6 +981,15 @@ void SrsServer::on_signal(int signo)
         srs_trace("user terminate program, gracefully quit.");
         signal_gracefully_quit = true;
         return;
+    }
+
+    if (signo == SIGCHLD) {
+        if (int pid = wait(NULL) > 0) {
+            srs_trace("child: %d exit and srs terminate", pid);
+        } else {
+            srs_error("parent recover child failed");
+        }
+        exit(0);
     }
 }
 
