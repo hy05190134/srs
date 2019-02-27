@@ -397,6 +397,12 @@ int run_master()
         return ret;
     }
 
+#ifdef SRS_SUPPORT_CDN_CLUSTER
+    if ((ret = _srs_server->initialize_bitch()) != ERROR_SUCCESS) {
+        return ret;
+    }
+#endif
+
     if ((ret = _srs_server->acquire_pid_file()) != ERROR_SUCCESS) {
         return ret;
     }

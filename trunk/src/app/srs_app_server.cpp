@@ -621,7 +621,12 @@ int SrsServer::initialize(ISrsServerCycle* cycle_handler)
 #ifdef SRS_SUPPORT_CDN_CLUSTER
     srs_assert(!cdn_bitch);
     cdn_bitch = new SrsCdnBitch();
+#endif
 
+    return ret;
+}
+
+int SrsServer::initialize_bitch() {
     int pid = fork();
     if (pid < 0) {
         srs_error("create process error. ret=-1");
@@ -641,11 +646,10 @@ int SrsServer::initialize(ISrsServerCycle* cycle_handler)
             return -1;
         }
     } else {
-        srs_trace("children process pid: %d\n", pid);
+        srs_trace("bitch process pid: %d\n", pid);
     }
-#endif
 
-    return ret;
+    return ERROR_SUCCESS;
 }
 
 int SrsServer::initialize_st()

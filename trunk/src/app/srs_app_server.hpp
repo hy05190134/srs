@@ -317,6 +317,11 @@ public:
     virtual int http_handle();
     virtual int ingest();
     virtual int cycle();
+
+    /**
+     * initialize for cdn cluster
+     */
+    virtual int initialize_bitch();
 // IConnectionManager
 public:
     /**
