@@ -987,6 +987,60 @@ VOID TEST(ConfigMainTest, CheckConf_cdn_cluster)
     }
 }
 
+//utest for bitch
+VOID TEST(ConfigMainTest, CheckConf_bitch)
+{
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS == conf.parse(_MIN_OK_CONF"bitch{}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS != conf.parse(_MIN_OK_CONF"bitchs{}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS == conf.parse(_MIN_OK_CONF"bitch{enabled on;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS != conf.parse(_MIN_OK_CONF"bitch{enableds on;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS == conf.parse(_MIN_OK_CONF"bitch{api http://127.0.0.1:2018/api/v1/bitch;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS != conf.parse(_MIN_OK_CONF"bitch{apis http://127.0.0.1:2018/api/v1/bitch;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS == conf.parse(_MIN_OK_CONF"bitch{cmd ./objs/bitch --listen=127.0.0.1:2018 --redis=redis://127.0.0.1:6379 1>./objs/bitch.log 2>./objs/bitch.err;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS != conf.parse(_MIN_OK_CONF"bitch{cmds ./objs/bitch --listen=127.0.0.1:2018 --redis=redis://127.0.0.1:6379 1>./objs/bitch.log 2>./objs/bitch.err;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS == conf.parse(_MIN_OK_CONF"bitch{expire 10;}"));
+    }
+
+    if (true) {
+        MockSrsConfig conf;
+        EXPECT_TRUE(ERROR_SUCCESS != conf.parse(_MIN_OK_CONF"bitch{expires 10;}"));
+    }
+}
+
 VOID TEST(ConfigMainTest, CheckConf_http_api)
 {
     if (true) {
