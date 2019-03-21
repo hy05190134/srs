@@ -2995,6 +2995,12 @@ int SrsConfig::get_bw_check_limit_kbps(string vhost)
 
 bool SrsConfig::get_vhost_is_edge(string vhost)
 {
+#ifdef SRS_SUPPORT_CDN_CLUSTER
+    if (get_cluster_enabled()) {
+        return get_cluster_role() == "edge";
+    }
+#endif
+
     SrsConfDirective* conf = get_vhost(vhost);
     return get_vhost_is_edge(conf);
 }
@@ -3018,6 +3024,12 @@ bool SrsConfig::get_vhost_is_edge(SrsConfDirective* vhost)
 
 SrsConfDirective* SrsConfig::get_vhost_edge_origin(string vhost)
 {
+#ifdef SRS_SUPPORT_CDN_CLUSTER
+    if (get_cluster_enabled()) {
+        return get_cluster_origin();
+    }
+#endif
+
     SrsConfDirective* conf = get_vhost(vhost);
 
     if (!conf) {
