@@ -633,26 +633,28 @@ int SrsServer::initialize(ISrsServerCycle* cycle_handler)
 }
 
 int SrsServer::initialize_bitch() {
-    int pid = fork();
-    if (pid < 0) {
-        srs_error("create process error. ret=-1");
-        return -1;
-    }
+    if (_srs_config->get_cluster_enabled() && _srs_config->get_bitch_enabled()) {
+        int pid = fork();
+        if (pid < 0) {
+            srs_error("create process error. ret=-1");
+            return -1;
+        }
 
-    //child process && exec
-    if (pid == 0) {
-        SrsConfDirective* bitch_cmd_conf = _srs_config->get_bitch_command();
-        if ((int)bitch_cmd_conf->args.size() == 5) {
-            if (execl(bitch_cmd_conf->args[0].c_str(), "bitch", bitch_cmd_conf->args[1].c_str(), bitch_cmd_conf->args[2].c_str(), bitch_cmd_conf->args[3].c_str(), bitch_cmd_conf->args[4].c_str(), NULL) < 0) {
-                srs_error("exec bitch process failed, err: %d", errno);
+        //child process && exec
+        if (pid == 0) {
+            SrsConfDirective* bitch_cmd_conf = _srs_config->get_bitch_command();
+            if ((int)bitch_cmd_conf->args.size() == 5) {
+                if (execl(bitch_cmd_conf->args[0].c_str(), "bitch", bitch_cmd_conf->args[1].c_str(), bitch_cmd_conf->args[2].c_str(), bitch_cmd_conf->args[3].c_str(), bitch_cmd_conf->args[4].c_str(), NULL) < 0) {
+                    srs_error("exec bitch process failed, err: %d", errno);
+                    return -1;
+                }
+            } else {
+                srs_error("bitch cmd params size error, size: %d", (int)bitch_cmd_conf->args.size());
                 return -1;
             }
         } else {
-            srs_error("bitch cmd params size error, size: %d", (int)bitch_cmd_conf->args.size());
-            return -1;
+            srs_trace("bitch process pid: %d\n", pid);
         }
-    } else {
-        srs_trace("bitch process pid: %d\n", pid);
     }
 
     return ERROR_SUCCESS;
